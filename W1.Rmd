@@ -55,6 +55,11 @@ Riseup: https://pad.riseup.net/p/WWD-tmp
 
 Mail: michalburdukiewicz@gmail.com
 
+## Materiały
+
+<img src="img/repo.png" width="500px" class="center">
+
+
 ## Literatura
 
  - Wilkinson, L. (2005). The Grammar of Graphics (New York: Springer-Verlag).
@@ -463,6 +468,8 @@ kable(dat[1L:2, c("cut", "clarity", "color", "carat", "price")])
  - **color**: kolor
  - **carat**: waga (w karatach)
  - **price**: cena (USD)
+ 
+Riseup: https://pad.riseup.net/p/WWD-tmp
 
 # Błędy w wizualizacjach 
 
@@ -570,6 +577,10 @@ Nadmiar stylizacji wykresu może zmniejszać czytelność wykresu.
 ## Prostota
 
 <a href="https://www.visualcapitalist.com/wp-content/uploads/2020/03/DeadliestPandemics-Infographic-87.jpg"><img src="https://www.visualcapitalist.com/wp-content/uploads/2020/03/DeadliestPandemics-Infographic-87.jpg" width="700px"></a>
+
+## Ocena wizualizacji danych
+
+Riseup: https://pad.riseup.net/p/WWD-tmp
 
 # Narzędzia do wizualizacji
 
