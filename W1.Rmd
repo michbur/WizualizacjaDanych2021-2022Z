@@ -570,6 +570,10 @@ https://www.color-blindness.com/coblis-color-blindness-simulator/
 
 Tableau domyślnie dobiera palety kolorów (zarówno ilościowe jak i kategoryczne), które są łatwo rozróżnialne również dla osób z zaburzeniami widzenia barwnego.
 
+## Kolory
+
+https://colorbrewer2.org/: narzędzie do generowania palet kolorów.
+
 ## Prostota
 
 Nadmiar stylizacji wykresu może zmniejszać czytelność wykresu.
