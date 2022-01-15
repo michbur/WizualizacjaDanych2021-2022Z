@@ -1,0 +1,217 @@
+---
+title: "Przykłady i ich poprawione wersje"
+author: "Michał Burdukiewicz"
+output: html_document
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(dplyr)
+library(ggplot2)
+library(ggthemes)
+library(rayshader)
+library(ggbeeswarm)
+library(patchwork)
+theme_set(theme_bw())
+```
+
+```{r}
+set.seed(15390)
+dat <- droplevels(diamonds[sample(1L:nrow(diamonds), 100), ])
+```
+
+
+
+## Rysunek 1
+
+Cel: pokazanie zależności ceny od cięcia.
+
+Rysunek 1
+Dane: cięcia; cena
+Atrybuty: wizualne, na zasadzie mapy izometrycznej, tak jak na str. 39 wykładu
+Geometrie: heatmap
+Fasety: brak
+Statystyki: gęstość
+Koordynaty: kartezjański
+Motyw: kolory różne w  zależności od jakości cięcia 
+
+```{r, fig.height=8}
+
+p1 <- ggplot(dat, aes(x = cut, y = price)) +
+  geom_boxplot(outlier.color = NA) +
+  geom_point(position = "jitter") +
+  ggtitle("Przed zmianami")
+
+p2 <- ggplot(dat, aes(x = cut, y = price)) +
+  geom_violin() +
+  ggtitle("Po zmianach")
+
+p1/p2
+```
+
+
+
+
+## Rysunek 2
+
+Cel: pokazanie liczby diamentów w zależności od cięcia i czystości.
+
+Rysunek 2
+Dane: czystość, jakość cięć, liczba wystapień
+Atrybuty wizualne: ośX: czystość, ośY: liczebność, zróżnicowanie kolorystyczne - rodzaj cięcia
+Geometrie: słupkowy skumulowany
+Fasety: brak
+Statystyki: liczebność (bez zamian)
+Koordynaty: kartezjańskie
+Motyw: kolory skontrastowane, gradient od zółtego (ideal), przez zielony do granatowego (Fair), legenda opisująca cięcie w pionie z prawej strony, czcionka rozrózniająca opis osi oraz wartości osi Y pokazane w większej gęstości
+
+
+```{r, fig.height=8}
+p1 <- group_by(dat, cut, clarity) %>% 
+  summarise(count = length(price)) %>% 
+  ggplot(aes(x = cut, y = clarity, fill = count)) +
+  geom_tile(color = "black") +
+  scale_fill_gradient(low = "white", high = "black") +
+  ggtitle("Przed zmianami")
+
+p2 <- group_by(dat, cut, clarity) %>% 
+  summarise(count = length(price)) %>% 
+  ggplot(aes(x = clarity, y = count, fill = cut)) +
+  scale_y_continuous(n.breaks = 10) +
+  geom_col() +
+  ggtitle("Po zmianach")
+
+p1/p2
+```
+
+
+
+
+
+## Rysunek 3
+
+Cel: pokazanie zależności ceny od liczby karatów i czystości.
+
+wersja I
+Dane:
+Atrybuty wizualne: kolory zam. kształtów
+Geometrie: 
+Fasety: oddzielne ze wzgl. na clarity: 
+Statystyki:
+Kordynanty:
+Motyw:
+wersja II    
+Dane:
+Atrybuty wizualne: 
+Geometrie: 
+Fasety:  
+Statystyki:
+Kordynanty: price w skali log
+Motyw:
+
+```{r, fig.height=8}
+p1 <- ggplot(dat, aes(x = carat, y = price, shape = clarity)) +
+  geom_point() +
+  ggtitle("Przed zmianami")
+
+p2 <- ggplot(dat, aes(x = carat, y = price, color = clarity)) +
+  geom_point() +
+  facet_wrap(~ clarity) + 
+  ggtitle("Po zmianach - wersja 1")
+
+p3 <- ggplot(dat, aes(x = carat, y = log(price), shape = clarity)) +
+  geom_point() +
+  scale_y_continuous("log(price)") +
+  ggtitle("Po zmianach - wersja 2")
+
+p1/p2/p3
+```
+
+
+
+## Rysunek 4
+
+Cel: pokazać zależność ceny od liczby karatów.
+
+Dane: bez zmian
+Aesthetics: 2-D zamiast 3-D, monochromatyczny
+Geometries: histogram
+Facets: brak
+Statistics: gęstość
+Coordinates: kartezjańskie
+Theme: jedna czcionka, opisanie waluty przy price, monochromatyczny
+
+```{r}
+p1 <- ggplot(dat, aes(x = carat, y = price)) +
+  stat_density2d(aes(fill = ..level..), geom = "polygon") +
+  ggtitle("Przed zmianami")
+
+plot_gg(p1, width = 3, height = 3)
+rgl::rglwidget()
+rgl::rgl.close()
+
+p2 <- ggplot(dat, aes(x = carat, y = price)) +
+  stat_density2d(aes(alpha = ..level..), geom = "polygon", color = "black") +
+  scale_y_continuous("price [USD]") +
+  ggtitle("Po zmianach")
+
+p2
+```
+
+
+
+
+
+
+## Rysunek 5
+
+Cel: pokazać liczbę diamentów w określonym kolorze, cięciu i czystości.
+
+Dane bez zmian: count 0-4/color - D-J, clarity, cut
+Atrybuty wizualne:oś x  - color, oś y - count, kolory dla poziomów clarity, różne kolory w jednym słupku
+Geometrie: słupki
+Fasety: usunięcie dla clarity, pozostawienie dla cut, przeniesienie wymiaru cut z wierszy do kolumn
+Statystyki: liczebność
+Koordynanty: kartezjański
+Motyw: usunięcie siatki pionowej, pozostawienie poziomej, zmniejszenie dokładności siatki - co 1, dodanie kolorów (dla clarity), legenda dla kolorów-poziomów clarity, rózne czcionki, dodanie tytułu wykresu, legenda dla kolorów diamentu D-J (gradacja od czystości do żółci)
+
+```{r,fig.height=11}
+p2 <- ggplot(dat, aes(x = color, fill = clarity)) +
+  geom_bar() +
+  facet_wrap( ~ cut, labeller = label_both) +
+  theme(panel.grid.major.x = element_blank()) +
+  ggtitle("Po zmianach")
+
+p1 <-ggplot(dat, aes(x = color)) +
+  geom_bar() +
+  facet_grid(cut ~ clarity, labeller = label_both) 
+  ggtitle("Przed zmianami")
+
+p1/p2
+```
+
+
+## Rysunek 6
+
+Cel: pokazać rozkład cen diamentów w zależności od cięcia.
+
+Dodanie waluty,
+Ewentualne wprowadzenie heatmapy,
+Lepsze zaznaczenie podziałek cenowych w histogramie (zlewanie przedziałów ze sobą), ew. zmiana liczby przedziałów w histogramie
+Zastosowanie fasetów - co zwiększyłoby czytelność (zrobiony stos i przez to jest nieczytelne),
+
+
+```{r,fig.height=7}
+p1 <- ggplot(dat, aes(x = price, fill = cut)) +
+  geom_histogram() +
+  ggtitle("Przed zmianami")
+
+p2 <- ggplot(dat, aes(x = price, fill = cut)) +
+  geom_histogram(bins = 20) +
+  facet_wrap(~ cut) +
+  scale_y_continuous("price [USD]") +
+  ggtitle("Po zmianach")
+
+p1/p2
+```
+
