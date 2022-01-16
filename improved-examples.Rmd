@@ -184,7 +184,7 @@ p2 <- ggplot(dat, aes(x = color, fill = clarity)) +
 
 p1 <-ggplot(dat, aes(x = color)) +
   geom_bar() +
-  facet_grid(cut ~ clarity, labeller = label_both) 
+  facet_grid(cut ~ clarity, labeller = label_both) +
   ggtitle("Przed zmianami")
 
 p1/p2

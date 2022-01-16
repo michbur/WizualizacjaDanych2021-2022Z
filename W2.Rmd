@@ -254,7 +254,7 @@ Mapa drzewa (treemap): wizualizacja hierarchicznych danych za pomocą zagnieźd�
 
 ## Wykresy radarowe
 
-Wykres radorowy (radar plot): porównanie kilku obiektów pod względem wielu charakterystyk.
+Wykres radarowy (radar plot): porównanie kilku obiektów pod względem wielu charakterystyk.
 
 ## Wykres trójkątny
 
